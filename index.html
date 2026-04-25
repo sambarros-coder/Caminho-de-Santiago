@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1208">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Santiago">
+<link rel="manifest" href="manifest.json">
+<title>Santiago 2026 · Treino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1208;
+  --parch: #f5ead6;
+  --parch2: #ede0c4;
+  --parch3: #e2d0aa;
+  --gold: #b8893a;
+  --gold2: #d4a855;
+  --rust: #8b3a1a;
+  --moss: #3a5c2a;
+  --sky: #2a4a6b;
+  --sand: #c4a46b;
+  --cream: #faf4e8;
+  --shadow: rgba(26,18,8,0.18);
+  --r: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  background: var(--ink);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SPLASH / SHELL ── */
+#app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+
+/* texture overlay */
+#app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  max-width: 430px;
+  margin: 0 auto;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.5;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: linear-gradient(160deg, var(--ink) 0%, #2d2010 100%);
+  padding: 20px 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.app-title {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.app-subtitle {
+  font-size: 11px;
+  color: var(--sand);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-top: 2px;
+}
+
+.header-badge {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex;
+  background: var(--ink);
+  border-bottom: 2px solid var(--gold);
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 10px 4px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--sand);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+}
+
+.nav-tab.active {
+  color: var(--gold2);
+  background: rgba(184,137,58,0.12);
+  border-bottom: 2px solid var(--gold2);
+  margin-bottom: -2px;
+}
+
+/* ── VIEWS ── */
+.view { display: none; padding: 16px; animation: fadeIn 0.25s ease; }
+.view.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ── TODAY CARD ── */
+.today-hero {
+  background: linear-gradient(135deg, var(--ink) 0%, #3a2810 100%);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 16px;
+  color: var(--parch);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--shadow);
+}
+
+.today-hero::after {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,137,58,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.today-date {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.today-type-icon {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.today-type-label {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold2);
+  margin-bottom: 6px;
+}
+
+.today-desc {
+  font-size: 14px;
+  color: var(--parch2);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.today-phase {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sand);
+  background: rgba(255,255,255,0.08);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+/* ── LOG FORM ── */
+.log-section {
+  background: var(--parch);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--parch3);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.log-section h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--parch3);
+}
+
+/* Done toggle */
+.done-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-track {
+  width: 52px; height: 28px;
+  background: var(--parch3);
+  border-radius: 14px;
+  position: relative;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.toggle-track.on { background: var(--moss); }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 22px; height: 22px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-track.on .toggle-thumb { transform: translateX(24px); }
+
+.toggle-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Field */
+.field-group { margin-bottom: 12px; }
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 5px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: white;
+  border: 1px solid var(--parch3);
+  border-radius: 6px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  color: var(--ink);
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.field-input:focus { outline: none; border-color: var(--gold); }
+
+.field-input[type="number"] { max-width: 120px; }
+
+textarea.field-input { resize: vertical; min-height: 72px; }
+
+/* Força exercises */
+.exercise-row {
+  display: grid;
+  grid-template-columns: 1fr 72px 72px;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.exercise-name {
+  font-size: 13px;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.exercise-input {
+  padding: 6px 8px;
+  background: white;
+  border: 1px solid var(--parch3);
+  border-radius: 5px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px;
+  color: var(--ink);
+  text-align: center;
+  -webkit-appearance: none;
+}
+
+.exercise-input:focus { outline: none; border-color: var(--gold); }
+
+.exercise-header {
+  display: grid;
+  grid-template-columns: 1fr 72px 72px;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.exercise-header span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--sand);
+  text-align: center;
+}
+
+.exercise-header span:first-child { text-align: left; }
+
+/* Save button */
+.btn-save {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--rust) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--r);
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(139,58,26,0.35);
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.btn-save:active { transform: scale(0.98); opacity: 0.9; }
+
+.save-confirm {
+  text-align: center;
+  padding: 8px;
+  color: var(--moss);
+  font-size: 14px;
+  font-weight: 600;
+  display: none;
+}
+
+/* ── CALENDAR VIEW ── */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.month-nav button {
+  width: 36px; height: 36px;
+  background: var(--parch);
+  border: 1px solid var(--parch3);
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.month-nav button:active { background: var(--parch3); }
+
+.month-title {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--sand);
+  padding: 4px 0;
+  text-transform: uppercase;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--parch);
+  border: 1px solid var(--parch3);
+  position: relative;
+  font-size: 12px;
+  font-family: 'Crimson Pro', serif;
+  color: var(--ink);
+  gap: 1px;
+}
+
+.cal-day:active { transform: scale(0.95); }
+.cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
+.cal-day.today { border-color: var(--gold); background: rgba(184,137,58,0.12); font-weight: 700; }
+.cal-day.done { background: rgba(58,92,42,0.15); border-color: rgba(58,92,42,0.4); }
+.cal-day.skipped { background: rgba(139,58,26,0.1); border-color: rgba(139,58,26,0.3); }
+.cal-day.out-range { opacity: 0.25; cursor: default; }
+
+.cal-day-num { font-size: 11px; font-weight: 600; line-height: 1; }
+.cal-day-icon { font-size: 13px; line-height: 1; }
+.cal-day-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.cal-day.done .cal-day-dot { background: var(--moss); }
+.cal-day.skipped .cal-day-dot { background: var(--rust); }
+
+/* ── PROGRESS VIEW ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--parch);
+  border-radius: var(--r);
+  padding: 14px;
+  border: 1px solid var(--parch3);
+  box-shadow: 0 2px 8px var(--shadow);
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--rust);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sand);
+  font-weight: 600;
+}
+
+.progress-bar-wrap {
+  background: var(--parch);
+  border-radius: var(--r);
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid var(--parch3);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.progress-bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.progress-bar-label span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.progress-bar-label span:last-child {
+  color: var(--rust);
+  font-family: 'Cinzel', serif;
+}
+
+.progress-bar-track {
+  height: 10px;
+  background: var(--parch3);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--rust) 100%);
+  border-radius: 5px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Phase timeline */
+.phase-list { margin-bottom: 16px; }
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--parch);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1px solid var(--parch3);
+}
+
+.phase-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.phase-item.active-phase { border-color: var(--gold); background: rgba(184,137,58,0.08); }
+.phase-item.done-phase { opacity: 0.55; }
+
+.phase-info { flex: 1; }
+.phase-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.phase-period { font-size: 11px; color: var(--sand); }
+
+.phase-item .phase-pct {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--rust);
+}
+
+/* ── CONFIG VIEW ── */
+.config-section {
+  background: var(--parch);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--parch3);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.config-section h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 12px;
+}
+
+.config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.config-row label {
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.btn-notify {
+  width: 100%;
+  padding: 12px;
+  background: var(--sky);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.2s;
+}
+
+.btn-notify:active { opacity: 0.85; }
+.btn-notify.granted { background: var(--moss); }
+
+.peregrino-note {
+  background: linear-gradient(135deg, var(--ink), #2d2010);
+  border-radius: var(--r);
+  padding: 16px;
+  color: var(--parch);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.peregrino-note .cross { font-size: 24px; margin-bottom: 6px; }
+.peregrino-note p { font-size: 13px; line-height: 1.6; font-style: italic; color: var(--parch2); }
+.peregrino-note strong { color: var(--gold2); font-style: normal; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+/* ── MODAL DAY ── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,8,0.6);
+  z-index: 200;
+  backdrop-filter: blur(3px);
+}
+
+.modal-backdrop.open { display: flex; align-items: flex-end; justify-content: center; }
+
+.modal-sheet {
+  background: var(--cream);
+  border-radius: 18px 18px 0 0;
+  width: 100%;
+  max-width: 430px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 20px 16px 32px;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--parch3);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px; right: 16px;
+  width: 28px; height: 28px;
+  background: var(--parch3);
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--parch3); border-radius: 2px; }
+
+/* ── SNACKBAR ── */
+.snackbar {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--moss);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 500;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.snackbar.show { transform: translateX(-50%) translateY(0); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--sand);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-top">
+      <div>
+        <div class="app-title">✦ Santiago</div>
+        <div class="app-subtitle">Caminho · 2026–2027</div>
+      </div>
+      <div class="header-badge" id="headerDaysLeft">— dias</div>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('hoje')">Hoje</button>
+    <button class="nav-tab" onclick="showView('calendario')">Calendário</button>
+    <button class="nav-tab" onclick="showView('progresso')">Progresso</button>
+    <button class="nav-tab" onclick="showView('config')">Config</button>
+  </nav>
+
+  <!-- ═══ VIEW: HOJE ═══ -->
+  <div class="view active" id="view-hoje">
+    <div class="today-hero" id="todayHero">
+      <div class="today-date" id="todayDate">—</div>
+      <div class="today-type-icon" id="todayIcon">⟳</div>
+      <div class="today-type-label" id="todayLabel">Carregando…</div>
+      <div class="today-desc" id="todayDesc"></div>
+      <div class="today-phase" id="todayPhase"></div>
+    </div>
+
+    <!-- Log form injected here -->
+    <div id="logFormContainer"></div>
+
+    <div class="snackbar" id="snackbar">✓ Registrado!</div>
+  </div>
+
+  <!-- ═══ VIEW: CALENDÁRIO ═══ -->
+  <div class="view" id="view-calendario">
+    <div class="month-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <span class="month-title" id="monthTitle">—</span>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- ═══ VIEW: PROGRESSO ═══ -->
+  <div class="view" id="view-progresso">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statDone">0</div>
+        <div class="stat-label">Treinos feitos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statAdh">0%</div>
+        <div class="stat-label">Aderência</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statKm">0</div>
+        <div class="stat-label">km totais</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-label">Sequência atual</div>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-label">
+        <span>Progresso do Plano</span>
+        <span id="progPct">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="phase-list" id="phaseList"></div>
+  </div>
+
+  <!-- ═══ VIEW: CONFIG ═══ -->
+  <div class="view" id="view-config">
+    <div class="config-section">
+      <h3>Lembretes de Treino</h3>
+      <div class="config-row">
+        <label>Horário do lembrete</label>
+        <input type="time" class="field-input" id="notifTime" value="06:30" style="max-width:110px">
+      </div>
+      <button class="btn-notify" id="btnNotify" onclick="requestNotify()">
+        🔔 Ativar Notificações
+      </button>
+      <p id="notifyStatus" style="font-size:12px;color:var(--sand);margin-top:8px;text-align:center;"></p>
+    </div>
+
+    <div class="config-section">
+      <h3>Dados</h3>
+      <button class="btn-notify" onclick="exportData()" style="background:var(--gold)">
+        📥 Exportar Registros (JSON)
+      </button>
+    </div>
+
+    <div class="peregrino-note">
+      <div class="cross">✟</div>
+      <strong>Buen Camino</strong>
+      <p>"O peregrino não tem pressa, mas não para."</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SHEET (day detail from calendar) -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="document.getElementById('modalBackdrop').classList.remove('open')">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  DATA: TRAINING SCHEDULE
+// ══════════════════════════════════════════
+
+const START = new Date(2026, 4, 1);  // May 1 2026
+const END   = new Date(2027, 2, 31); // Mar 31 2027
+
+// Types
+const T = {
+  WALK_SHORT:  { icon:'🚶', label:'Caminhada Curta',  color:'#2a4a6b', phase:'aeróbico' },
+  WALK_MED:    { icon:'🥾', label:'Caminhada Média',  color:'#3a5c2a', phase:'aeróbico' },
+  WALK_LONG:   { icon:'🏔️', label:'Caminhada Longa',  color:'#1a3a1a', phase:'aeróbico' },
+  FORCA_A:     { icon:'💪', label:'Força A – Pernas', color:'#6b2a2a', phase:'força' },
+  FORCA_B:     { icon:'🏋️', label:'Força B – Postura',color:'#5a2a4a', phase:'força' },
+  CANOA:       { icon:'🛶', label:'Canoa Havaiana',   color:'#1a4a5a', phase:'complementar' },
+  CANOA_WALK:  { icon:'🛶', label:'Canoa + Caminhada',color:'#1a3a4a', phase:'complementar' },
+  TENIS:       { icon:'🎾', label:'Tênis',             color:'#4a5a1a', phase:'complementar' },
+  WALK_TENIS:  { icon:'🚶🎾',label:'Caminhada + Tênis',color:'#2a4a3a', phase:'duplo' },
+  REST:        { icon:'😴', label:'Descanso',          color:'#5a4a3a', phase:'recuperação' },
+  REST_OPT:    { icon:'🌿', label:'Descanso / Opcional',color:'#4a3a2a', phase:'recuperação' },
+};
+
+const FORCA_A_EX = [
+  'Agachamento','Leg Press','Afundo andando','Mesa flexora','Panturrilha em pé','Prancha frontal','Dead bug'
+];
+const FORCA_B_EX = [
+  'Step-up em caixa','Stiff c/ halteres','Cadeira abdutora','Elevação pélvica','Pulley frente','Face pull','Prancha lateral'
+];
+
+function getPhase(date) {
+  const d = date;
+  if (d >= new Date(2026,4,1) && d <= new Date(2026,5,30)) return { name:'Fase 1 – Base Estrutural', color:'#2a4a6b' };
+  if (d >= new Date(2026,6,1) && d <= new Date(2026,8,30)) return { name:'Fase 2 – Ganho de Volume',  color:'#3a5c2a' };
+  if (d >= new Date(2026,9,1) && d <= new Date(2026,11,31))return { name:'Fase 3 – Especificidade',   color:'#8b3a1a' };
+  return { name:'Fase 4 – Polimento', color:'#2a4a6b' };
+}
+
+function getTrainingForDate(date) {
+  if (date < START || date > END) return null;
+
+  const dow = date.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  const isSpecificity = (date.getMonth() >= 9 && date.getMonth() <= 11); // Oct–Dec
+  const isPolishing   = (date >= new Date(2027,0,1));
+
+  // Day descriptions
+  const descriptions = {
+    [T.WALK_SHORT.label]: isPolishing
+      ? 'Caminhada curta (esteira ou rua plana) • 16–22 km | Noite: Tênis (1–2h)'
+      : 'Caminhada curta (esteira ou rua plana) • 8–12 km | Noite: Tênis (1–2h)',
+    [T.WALK_MED.label]: isSpecificity
+      ? 'Caminhada média (12–18 km) com mochila progressiva'
+      : 'Caminhada média (12–18 km)',
+    [T.WALK_LONG.label]: isSpecificity
+      ? 'Caminhada longa (18–28 km) — priorizar este dia. Mochila progressiva recomendada.'
+      : 'Canoa havaiana (ritmo confortável) OU Caminhada longa (18–28 km)',
+    [T.FORCA_A.label]: 'Agachamento, Leg Press, Afundo andando, Mesa flexora, Panturrilha, Prancha, Dead bug',
+    [T.FORCA_B.label]: 'Step-up, Stiff, Cadeira abdutora, Elevação pélvica, Pulley frente, Face pull, Prancha lateral',
+    [T.CANOA_WALK.label]: 'Canoa havaiana (10 km médio) + Caminhada média (12–18 km)',
+    [T.REST.label]: 'Descanso ativo. Opcional: Canoa leve OU Caminhada regenerativa 6–10 km',
+    [T.REST_OPT.label]: 'Descanso total. Opcional: Mobilidade, alongamentos, liberação miofascial',
+  };
+
+  // Phase-based week structure
+  // Canonical week: Mon=walk+tenis, Tue=ForcaA, Wed=Canoa+walk, Thu=ForcaB, Fri=walk_long/canoa, Sat=rest, Sun=rest_opt
+  // Phase 2 (Jul–Sep): reduce force, add walk days
+  // Phase 3 (Oct–Dec): more walks, force 1x/week
+  // Phase 4 (Jan–Mar): polishing
+
+  let type, desc;
+
+  if (dow === 0) { // Sunday
+    type = T.REST_OPT;
+    desc = descriptions[T.REST_OPT.label];
+  } else if (dow === 6) { // Saturday
+    type = T.REST;
+    desc = descriptions[T.REST.label];
+  } else if (dow === 1) { // Monday
+    type = T.WALK_TENIS;
+    desc = descriptions[T.WALK_SHORT.label];
+  } else if (dow === 2) { // Tuesday
+    if (isSpecificity) {
+      type = T.WALK_MED;
+      desc = descriptions[T.WALK_MED.label];
+    } else {
+      type = T.FORCA_A;
+      desc = descriptions[T.FORCA_A.label];
+    }
+  } else if (dow === 3) { // Wednesday
+    type = T.CANOA_WALK;
+    desc = descriptions[T.CANOA_WALK.label];
+  } else if (dow === 4) { // Thursday
+    if (isSpecificity) {
+      type = T.WALK_MED;
+      desc = 'Caminhada média (14–20 km)';
+    } else {
+      type = T.FORCA_B;
+      desc = descriptions[T.FORCA_B.label];
+    }
+  } else { // Friday
+    type = T.WALK_LONG;
+    desc = descriptions[T.WALK_LONG.label];
+  }
+
+  return { type, desc, phase: getPhase(date) };
+}
+
+// ══════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function loadLog(dateStr) {
+  try { return JSON.parse(localStorage.getItem('stg_log_'+dateStr) || 'null'); } catch(e) { return null; }
+}
+
+function saveLog(dateStr, data) {
+  localStorage.setItem('stg_log_'+dateStr, JSON.stringify(data));
+}
+
+// ══════════════════════════════════════════
+//  UI STATE
+// ══════════════════════════════════════════
+
+let calViewDate = new Date();
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  const tabs = ['hoje','calendario','progresso','config'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+
+  if (id === 'calendario') renderCalendar();
+  if (id === 'progresso') renderProgress();
+}
+
+// ══════════════════════════════════════════
+//  TODAY VIEW
+// ══════════════════════════════════════════
+
+function renderToday() {
+  const today = new Date();
+  const key = dateKey(today);
+  const training = getTrainingForDate(today);
+
+  // Header days countdown
+  const msLeft = END - today;
+  const daysLeft = Math.max(0, Math.ceil(msLeft / 86400000));
+  document.getElementById('headerDaysLeft').textContent = daysLeft + ' dias';
+
+  // Date
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const dows = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  document.getElementById('todayDate').textContent =
+    `${dows[today.getDay()]}, ${today.getDate()} de ${months[today.getMonth()]} de ${today.getFullYear()}`;
+
+  if (!training) {
+    document.getElementById('todayIcon').textContent = '🎉';
+    document.getElementById('todayLabel').textContent = 'Fora do período do plano';
+    document.getElementById('todayDesc').textContent = '';
+    document.getElementById('todayPhase').textContent = '';
+    document.getElementById('logFormContainer').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('todayIcon').textContent = training.type.icon;
+  document.getElementById('todayLabel').textContent = training.type.label;
+  document.getElementById('todayDesc').textContent = training.desc;
+  document.getElementById('todayPhase').textContent = training.phase.name;
+
+  // Render log form
+  renderLogForm(key, training, 'logFormContainer', false);
+}
+
+function renderLogForm(key, training, containerId, isModal) {
+  const log = loadLog(key) || {};
+  const container = document.getElementById(containerId);
+  const isForceA = training.type === T.FORCA_A;
+  const isForceB = training.type === T.FORCA_B;
+  const isForce = isForceA || isForceB;
+  const exercises = isForceA ? FORCA_A_EX : FORCA_B_EX;
+
+  let exerciseHTML = '';
+  if (isForce) {
+    exerciseHTML = `
+      <div class="field-group">
+        <div class="exercise-header">
+          <span>Exercício</span><span>Kg/nível</span><span>Reps</span>
+        </div>
+        ${exercises.map((ex, i) => {
+          const saved = (log.exercises || [])[i] || {};
+          return `<div class="exercise-row">
+            <span class="exercise-name">${ex}</span>
+            <input class="exercise-input" type="number" placeholder="—" value="${saved.kg||''}" id="${key}_kg_${i}" min="0" step="0.5">
+            <input class="exercise-input" type="number" placeholder="—" value="${saved.reps||''}" id="${key}_rp_${i}" min="0">
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  const showKm = !isForce;
+  const toggleState = log.done ? 'on' : '';
+
+  container.innerHTML = `
+    <div class="log-section">
+      <h3>Registrar Execução</h3>
+      <div class="field-group">
+        <div class="done-toggle" onclick="toggleDone('${key}')">
+          <div class="toggle-track ${toggleState}" id="tog_${key}">
+            <div class="toggle-thumb"></div>
+          </div>
+          <span class="toggle-label" id="togLabel_${key}">${log.done ? '✓ Treino realizado' : 'Marcar como feito'}</span>
+        </div>
+      </div>
+      ${showKm ? `<div class="field-group">
+        <label class="field-label">Distância percorrida (km)</label>
+        <input type="number" class="field-input" id="${key}_km" placeholder="ex: 15.2" value="${log.km||''}" step="0.1" min="0">
+      </div>` : ''}
+      ${exerciseHTML}
+      <div class="field-group">
+        <label class="field-label">Notas</label>
+        <textarea class="field-input" id="${key}_note" placeholder="Como foi o treino? Sensações, ajustes…">${log.note||''}</textarea>
+      </div>
+      <button class="btn-save" onclick="saveLogForm('${key}', ${isForce}, ${exercises.length})">
+        Salvar Registro
+      </button>
+    </div>
+  `;
+}
+
+function toggleDone(key) {
+  const track = document.getElementById('tog_'+key);
+  const label = document.getElementById('togLabel_'+key);
+  const isOn = track.classList.toggle('on');
+  label.textContent = isOn ? '✓ Treino realizado' : 'Marcar como feito';
+}
+
+function saveLogForm(key, isForce, exCount) {
+  const done = document.getElementById('tog_'+key)?.classList.contains('on') || false;
+  const km = parseFloat(document.getElementById(key+'_km')?.value) || 0;
+  const note = document.getElementById(key+'_note')?.value || '';
+  const exercises = [];
+
+  if (isForce) {
+    for (let i = 0; i < exCount; i++) {
+      exercises.push({
+        kg: parseFloat(document.getElementById(`${key}_kg_${i}`)?.value) || 0,
+        reps: parseInt(document.getElementById(`${key}_rp_${i}`)?.value) || 0
+      });
+    }
+  }
+
+  saveLog(key, { done, km, note, exercises, ts: Date.now() });
+  showSnackbar('✓ Registro salvo!');
+}
+
+function showSnackbar(msg) {
+  const s = document.getElementById('snackbar') || document.createElement('div');
+  s.textContent = msg;
+  s.classList.add('show');
+  setTimeout(() => s.classList.remove('show'), 2200);
+}
+
+// ══════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════
+
+function renderCalendar() {
+  const y = calViewDate.getFullYear();
+  const m = calViewDate.getMonth();
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('monthTitle').textContent = `${months[m]} ${y}`;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // DOW headers
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(y, m, d);
+    const key = dateKey(date);
+    const training = getTrainingForDate(date);
+    const log = loadLog(key);
+
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+
+    const isToday = dateKey(today) === key;
+    const isOutRange = date < START || date > END;
+
+    if (isToday) el.classList.add('today');
+    if (isOutRange) el.classList.add('out-range');
+    if (log?.done) el.classList.add('done');
+    else if (log && !log.done && date < today) el.classList.add('skipped');
+
+    el.innerHTML = `
+      <span class="cal-day-num">${d}</span>
+      ${training ? `<span class="cal-day-icon">${training.type.icon}</span>` : ''}
+      <div class="cal-day-dot"></div>
+    `;
+
+    if (!isOutRange && training) {
+      el.onclick = () => openDayModal(date, key, training);
+    }
+
+    grid.appendChild(el);
+  }
+}
+
+function changeMonth(dir) {
+  calViewDate = new Date(calViewDate.getFullYear(), calViewDate.getMonth() + dir, 1);
+  renderCalendar();
+}
+
+// ══════════════════════════════════════════
+//  DAY MODAL
+// ══════════════════════════════════════════
+
+function openDayModal(date, key, training) {
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const dows = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div class="today-date">${dows[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}</div>
+      <div style="font-size:32px;margin:6px 0;">${training.type.icon}</div>
+      <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:600;color:var(--rust);margin-bottom:4px;">${training.type.label}</div>
+      <div style="font-size:13px;color:var(--sand);font-style:italic;margin-bottom:8px;">${training.desc}</div>
+      <div class="today-phase" style="background:var(--parch2);color:var(--rust);">${training.phase.name}</div>
+    </div>
+    <div id="modalFormContainer"></div>
+  `;
+
+  document.getElementById('modalBackdrop').classList.add('open');
+  renderLogForm(key, training, 'modalFormContainer', true);
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalBackdrop')) {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    renderCalendar();
+    renderToday();
+  }
+}
+
+// ══════════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════════
+
+function renderProgress() {
+  const today = new Date();
+  let totalDays = 0, doneDays = 0, totalKm = 0, streak = 0, curStreak = 0;
+
+  // Count all training days from start to today
+  let d = new Date(START);
+  while (d <= today && d <= END) {
+    const training = getTrainingForDate(d);
+    if (training && training.type !== T.REST && training.type !== T.REST_OPT) {
+      totalDays++;
+      const log = loadLog(dateKey(d));
+      if (log?.done) {
+        doneDays++;
+        totalKm += log.km || 0;
+        curStreak++;
+        streak = Math.max(streak, curStreak);
+      } else {
+        curStreak = 0;
+      }
+    }
+    d = new Date(d.getTime() + 86400000);
+  }
+
+  const adherence = totalDays > 0 ? Math.round((doneDays/totalDays)*100) : 0;
+
+  // Total plan days for progress %
+  let planTotal = 0;
+  let pd = new Date(START);
+  while (pd <= END) {
+    const t = getTrainingForDate(pd);
+    if (t && t.type !== T.REST && t.type !== T.REST_OPT) planTotal++;
+    pd = new Date(pd.getTime() + 86400000);
+  }
+
+  const planPct = planTotal > 0 ? Math.round((doneDays/planTotal)*100) : 0;
+
+  document.getElementById('statDone').textContent = doneDays;
+  document.getElementById('statAdh').textContent = adherence + '%';
+  document.getElementById('statKm').textContent = Math.round(totalKm);
+  document.getElementById('statStreak').textContent = curStreak;
+  document.getElementById('progPct').textContent = planPct + '%';
+  document.getElementById('progBar').style.width = planPct + '%';
+
+  // Phase breakdown
+  const phases = [
+    { name:'Fase 1 – Base Estrutural', start: new Date(2026,4,1), end: new Date(2026,5,30), color:'#2a4a6b' },
+    { name:'Fase 2 – Ganho de Volume', start: new Date(2026,6,1), end: new Date(2026,8,30), color:'#3a5c2a' },
+    { name:'Fase 3 – Especificidade',  start: new Date(2026,9,1), end: new Date(2026,11,31),color:'#8b3a1a' },
+    { name:'Fase 4 – Polimento',       start: new Date(2027,0,1), end: new Date(2027,2,31), color:'#2a4a6b' },
+  ];
+
+  const phaseList = document.getElementById('phaseList');
+  phaseList.innerHTML = '';
+
+  phases.forEach(ph => {
+    let pTotal = 0, pDone = 0;
+    let pd2 = new Date(ph.start);
+    while (pd2 <= ph.end) {
+      const t = getTrainingForDate(pd2);
+      if (t && t.type !== T.REST && t.type !== T.REST_OPT) {
+        pTotal++;
+        if (loadLog(dateKey(pd2))?.done) pDone++;
+      }
+      pd2 = new Date(pd2.getTime() + 86400000);
+    }
+
+    const isActive = today >= ph.start && today <= ph.end;
+    const isDone = today > ph.end;
+    const pPct = pTotal > 0 ? Math.round((pDone/pTotal)*100) : 0;
+
+    const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const period = `${ph.start.getDate()} ${months[ph.start.getMonth()]} – ${ph.end.getDate()} ${months[ph.end.getMonth()]} ${ph.end.getFullYear()}`;
+
+    const el = document.createElement('div');
+    el.className = `phase-item ${isActive ? 'active-phase' : ''} ${isDone ? 'done-phase' : ''}`;
+    el.innerHTML = `
+      <div class="phase-dot" style="background:${ph.color}"></div>
+      <div class="phase-info">
+        <div class="phase-name">${ph.name}</div>
+        <div class="phase-period">${period}</div>
+      </div>
+      <div class="phase-pct">${pPct}%</div>
+    `;
+    phaseList.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════════
+//  NOTIFICATIONS
+// ══════════════════════════════════════════
+
+async function requestNotify() {
+  if (!('Notification' in window)) {
+    document.getElementById('notifyStatus').textContent = 'Notificações não suportadas neste navegador.';
+    return;
+  }
+
+  const perm = await Notification.requestPermission();
+  const btn = document.getElementById('btnNotify');
+  const status = document.getElementById('notifyStatus');
+
+  if (perm === 'granted') {
+    btn.textContent = '✓ Notificações Ativas';
+    btn.classList.add('granted');
+    status.textContent = 'Permissão concedida! Lembretes serão enviados conforme o horário configurado.';
+    localStorage.setItem('stg_notify', '1');
+    scheduleNotification();
+  } else {
+    status.textContent = 'Permissão negada. Habilite nas configurações do navegador.';
+  }
+}
+
+function scheduleNotification() {
+  if (!localStorage.getItem('stg_notify')) return;
+  if (!('serviceWorker' in navigator)) return;
+
+  const timeVal = document.getElementById('notifTime')?.value || '06:30';
+  const [h, min] = timeVal.split(':').map(Number);
+
+  const now = new Date();
+  const target = new Date();
+  target.setHours(h, min, 0, 0);
+  if (target <= now) target.setDate(target.getDate() + 1);
+
+  const delay = target - now;
+
+  const today = new Date();
+  const training = getTrainingForDate(today);
+  if (!training) return;
+
+  navigator.serviceWorker.ready.then(reg => {
+    reg.active?.postMessage({
+      type: 'SCHEDULE_NOTIFICATION',
+      title: '✦ Santiago – Treino de hoje',
+      body: `${training.type.icon} ${training.type.label}`,
+      delay
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+//  EXPORT
+// ══════════════════════════════════════════
+
+function exportData() {
+  const data = {};
+  for (let k in localStorage) {
+    if (k.startsWith('stg_log_')) data[k.replace('stg_log_','')] = JSON.parse(localStorage[k]);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'santiago_registros.json';
+  a.click();
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+// Init notify button state
+if (localStorage.getItem('stg_notify') && Notification.permission === 'granted') {
+  document.getElementById('btnNotify')?.classList.add('granted');
+  document.getElementById('btnNotify').textContent = '✓ Notificações Ativas';
+  scheduleNotification();
+}
+
+// Set calViewDate to current month (clamped to plan)
+const today0 = new Date();
+if (today0 < START) calViewDate = new Date(START);
+else if (today0 > END) calViewDate = new Date(END);
+else calViewDate = new Date(today0.getFullYear(), today0.getMonth(), 1);
+
+renderToday();
+</script>
+</body>
+</html>
