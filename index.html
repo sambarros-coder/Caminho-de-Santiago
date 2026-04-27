@@ -299,34 +299,105 @@ body {
 textarea.field-input { resize: vertical; min-height: 72px; }
 
 /* Força exercises */
-.exercise-row {
-  display: grid;
-  grid-template-columns: 1fr 72px 72px;
-  gap: 6px;
-  align-items: center;
-  margin-bottom: 8px;
+.exercise-block {
+  background: white;
+  border: 1px solid var(--parch3);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+.exercise-block.ex-done {
+  border-color: rgba(58,92,42,0.45);
+  box-shadow: inset 3px 0 0 var(--moss);
+}
+
+.exercise-block.ex-skip {
+  border-color: rgba(139,58,26,0.3);
+  opacity: 0.6;
+}
+
+.exercise-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px 8px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--parch3);
+}
+
+.exercise-block.ex-done .exercise-top { border-bottom-color: rgba(58,92,42,0.2); }
+
+.ex-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--parch3);
+  background: var(--parch);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  transition: all 0.2s;
+}
+
+.exercise-block.ex-done .ex-check {
+  background: var(--moss);
+  border-color: var(--moss);
+  color: white;
+}
+
+.ex-name-wrap { flex: 1; min-width: 0; }
 
 .exercise-name {
   font-size: 13px;
+  font-weight: 600;
   color: var(--ink);
+  display: block;
+}
+
+.exercise-prescription {
+  font-size: 11px;
+  color: var(--gold);
   font-style: italic;
+  font-family: 'Crimson Pro', serif;
+  display: block;
+  margin-top: 1px;
+}
+
+.exercise-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px 10px 10px;
+}
+
+.ex-field-wrap { display: flex; flex-direction: column; gap: 3px; }
+
+.ex-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--sand);
 }
 
 .exercise-input {
-  padding: 6px 8px;
-  background: white;
+  padding: 7px 8px;
+  background: var(--parch);
   border: 1px solid var(--parch3);
   border-radius: 5px;
   font-family: 'Crimson Pro', serif;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   text-align: center;
   -webkit-appearance: none;
+  width: 100%;
 }
 
-.exercise-input:focus { outline: none; border-color: var(--gold); }
+.exercise-input:focus { outline: none; border-color: var(--gold); background: white; }
 
+/* legacy exercise-header kept for safety */
 .exercise-header {
   display: grid;
   grid-template-columns: 1fr 72px 72px;
@@ -706,6 +777,75 @@ textarea.field-input { resize: vertical; min-height: 72px; }
 }
 .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
 .empty-state p { font-size: 14px; line-height: 1.6; }
+
+/* ── MOTIVATIONAL CARD ── */
+.motiv-card {
+  background: linear-gradient(145deg, #2a1e0e 0%, #1a1208 60%, #0f2a1a 100%);
+  border-radius: var(--r);
+  padding: 18px 18px 14px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(184,137,58,0.25);
+  box-shadow: 0 3px 16px rgba(0,0,0,0.3);
+}
+
+.motiv-card::before {
+  content: '❝';
+  position: absolute;
+  top: -4px; left: 10px;
+  font-size: 64px;
+  color: rgba(184,137,58,0.12);
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.motiv-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(58,92,42,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.motiv-scallop {
+  font-size: 16px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.motiv-text {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--parch);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.motiv-author {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+.motiv-day-indicator {
+  position: absolute;
+  top: 12px; right: 14px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(196,164,107,0.4);
+  font-family: 'Cinzel', serif;
+}
 </style>
 </head>
 <body>
@@ -738,6 +878,14 @@ textarea.field-input { resize: vertical; min-height: 72px; }
       <div class="today-type-label" id="todayLabel">Carregando…</div>
       <div class="today-desc" id="todayDesc"></div>
       <div class="today-phase" id="todayPhase"></div>
+    </div>
+
+    <!-- Motivational card -->
+    <div class="motiv-card" id="motivCard">
+      <div class="motiv-day-indicator" id="motivDayNum"></div>
+      <div class="motiv-scallop">🐚</div>
+      <div class="motiv-text" id="motivText"></div>
+      <div class="motiv-author" id="motivAuthor"></div>
     </div>
 
     <!-- Log form injected here -->
@@ -852,10 +1000,22 @@ const T = {
 };
 
 const FORCA_A_EX = [
-  'Agachamento','Leg Press','Afundo andando','Mesa flexora','Panturrilha em pé','Prancha frontal','Dead bug'
+  { name:'Agachamento',      prescription:'3 séries × 10–12 reps' },
+  { name:'Leg Press',        prescription:'3 séries × 12–15 reps' },
+  { name:'Afundo andando',   prescription:'3 séries × 10 reps/perna' },
+  { name:'Mesa flexora',     prescription:'3 séries × 12 reps' },
+  { name:'Panturrilha em pé',prescription:'4 séries × 15–20 reps' },
+  { name:'Prancha frontal',  prescription:'3 séries × 30–45 seg' },
+  { name:'Dead bug',         prescription:'3 séries × 10 reps/lado' },
 ];
 const FORCA_B_EX = [
-  'Step-up em caixa','Stiff c/ halteres','Cadeira abdutora','Elevação pélvica','Pulley frente','Face pull','Prancha lateral'
+  { name:'Step-up em caixa', prescription:'3 séries × 10 reps/perna' },
+  { name:'Stiff c/ halteres',prescription:'3 séries × 10–12 reps' },
+  { name:'Cadeira abdutora', prescription:'3 séries × 15 reps' },
+  { name:'Elevação pélvica', prescription:'3 séries × 12 reps' },
+  { name:'Pulley frente',    prescription:'3 séries × 10–12 reps' },
+  { name:'Face pull',        prescription:'3 séries × 12–15 reps' },
+  { name:'Prancha lateral',  prescription:'3 séries × 30 seg/lado' },
 ];
 
 function getPhase(date) {
@@ -969,6 +1129,71 @@ function showView(id) {
 }
 
 // ══════════════════════════════════════════
+//  MOTIVATIONAL QUOTES
+//  Fontes: peregrinos reais, autores verificados, tradição do Caminho
+// ══════════════════════════════════════════
+
+const QUOTES = [
+  // — Caminho de Santiago / tradição pereguina
+  { text: "O Caminho não são quilómetros. O Caminho é ser feliz com a nossa mochila e com o Outro, porque o Outro somos nós mesmos.", author: "Tradição do Caminho de Santiago" },
+  { text: "Não vás para o Caminho para competir ou ensinar. Vai para o Caminho aprender. Abre o coração.", author: "Tradição do Caminho de Santiago" },
+  { text: "A cada dia o peregrino tem obstáculos novos a vencer, pois o Caminho é o espelho de sua vida.", author: "Domingos de Gouveia Rodrigues" },
+  { text: "Cada passo estou mais próximo de conhecer o melhor de mim.", author: "Concurso de Frases, Santiago Brasil" },
+  { text: "No silêncio do caminho, encontramos a força que mora dentro de nós.", author: "Concurso de Frases, Santiago Brasil" },
+  { text: "Às vezes, é no andar que encontramos o que não sabíamos que procurávamos.", author: "Concurso de Frases, Santiago Brasil" },
+  { text: "A história de transformação que você quer começa com o primeiro passo.", author: "Concurso de Frases, Santiago Brasil" },
+  { text: "Não é sobre quem você é no começo da jornada, mas sim sobre quem se torna ao final dela.", author: "Concurso de Frases, Santiago Brasil" },
+  { text: "Peregrinação é a viagem ao nosso interior — ao mais íntimo da nossa alma.", author: "Diários do Caminho Português" },
+  { text: "O peregrino não sabe nada: onde vai dormir nem o que fará no dia seguinte. Fadiga, incerteza e insegurança são o pão do seu cotidiano. E ele tem uma meta.", author: "Relato de peregrina, Caminho Francês" },
+  { text: "Todos voltam do Caminho de Santiago mais fortes. A superação é pilar da grande travessia.", author: "Walk and Talk, Caminho de Compostela" },
+  { text: "Vivi na pele e entendi que o que importa é a jornada e não o destino.", author: "Daniela Taminato, Caminho Francês 2010" },
+  { text: "Quando você percorre o Caminho, a experiência reconfigura o olhar, dilata o coração e projeta a visão para além da linha do horizonte.", author: "Associação Espaço Jacobeus" },
+  { text: "Permanece en ti.", author: "Grafite num albergue em Estella, Navarra — citando Lao Tsé" },
+  { text: "Nunca te rendas.", author: "Pulseira de peregrino, Caminho de Santiago" },
+
+  // — Autores célebres, citações verificadas
+  { text: "O sucesso nasce do querer, da determinação e persistência em se chegar a um objetivo. Mesmo não atingindo o alvo, quem busca e vence obstáculos fará coisas admiráveis.", author: "José de Alencar" },
+  { text: "Se você quer ser bem-sucedido, precisa de dedicação total, buscar o seu último limite e dar o melhor de si mesmo.", author: "Ayrton Senna" },
+  { text: "Disciplina é escolher entre o que você quer agora e o que você quer de verdade.", author: "Provérbio — tradição atlética" },
+  { text: "Motivação é o que te faz começar. Hábito é o que te faz continuar.", author: "Jim Ryun, atleta olímpico" },
+  { text: "Primeiro fazemos os nossos hábitos. Então, os nossos hábitos nos fazem.", author: "John Dryden, poeta inglês (séc. XVII)" },
+  { text: "Caia sete vezes, levante oito.", author: "Provérbio japonês" },
+  { text: "A única limitação que você tem está na sua cabeça.", author: "Tony Robbins" },
+  { text: "Se você cansar, aprenda a descansar e não a desistir.", author: "Provérbio — tradição esportiva" },
+  { text: "O treino mais importante é aquele que você faz quando não está com vontade.", author: "Provérbio — tradição do atletismo" },
+  { text: "O resultado que você quer está escondido no treino que você pula.", author: "Provérbio — tradição fitness" },
+  { text: "A constância transforma, a pressa atrapalha. Continue.", author: "Provérbio — tradição esportiva" },
+  { text: "Não compare seu capítulo 1 com o capítulo 20 de alguém. Vá no seu ritmo.", author: "Provérbio contemporâneo" },
+  { text: "A dor de hoje é a força de amanhã.", author: "Provérbio — tradição atlética" },
+  { text: "Acredite que você pode — assim você já está no meio do caminho.", author: "Theodore Roosevelt" },
+  { text: "Se você está cansado de recomeçar, pare de desistir.", author: "Provérbio — tradição esportiva" },
+  { text: "Você tem objetivos para conquistar e não pessoas para impressionar.", author: "Joel Jota" },
+
+  // — Frases da espiritualidade pereguina
+  { text: "Ciência e fé podem coexistir. A ciência para curar as feridas, e a fé para suportar o sofrimento.", author: "Domingos de Gouveia Rodrigues, Caminhos de Santiago" },
+  { text: "O peregrino não tem pressa, mas não para.", author: "Tradição do Caminho de Santiago" },
+  { text: "O Caminho não é só para os que caminham até a catedral — é para todos que decidem partir.", author: "Blog do Caminho, 2025" },
+  { text: "Grandes resultados levam tempo. Alegre-se com as pequenas conquistas.", author: "Tradição esportiva" },
+];
+
+function getDailyQuote() {
+  // Deterministic rotation: day of year within plan → quote index
+  const today = new Date();
+  const planStart = new Date(2026, 4, 1);
+  const msPerDay = 86400000;
+  const dayNum = Math.max(0, Math.floor((today - planStart) / msPerDay));
+  const idx = dayNum % QUOTES.length;
+  return { quote: QUOTES[idx], dayNum: dayNum + 1 };
+}
+
+function renderMotivation() {
+  const { quote, dayNum } = getDailyQuote();
+  document.getElementById('motivText').textContent = quote.text;
+  document.getElementById('motivAuthor').textContent = '— ' + quote.author;
+  document.getElementById('motivDayNum').textContent = `Dia ${dayNum} de treino`;
+}
+
+// ══════════════════════════════════════════
 //  TODAY VIEW
 // ══════════════════════════════════════════
 
@@ -976,6 +1201,9 @@ function renderToday() {
   const today = new Date();
   const key = dateKey(today);
   const training = getTrainingForDate(today);
+
+  // Motivational quote of the day
+  renderMotivation();
 
   // Header days countdown
   const msLeft = END - today;
@@ -1016,34 +1244,54 @@ function renderLogForm(key, training, containerId, isModal) {
 
   let exerciseHTML = '';
   if (isForce) {
-    exerciseHTML = `
-      <div class="field-group">
-        <div class="exercise-header">
-          <span>Exercício</span><span>Kg/nível</span><span>Reps</span>
-        </div>
-        ${exercises.map((ex, i) => {
-          const saved = (log.exercises || [])[i] || {};
-          return `<div class="exercise-row">
-            <span class="exercise-name">${ex}</span>
-            <input class="exercise-input" type="number" placeholder="—" value="${saved.kg||''}" id="${key}_kg_${i}" min="0" step="0.5">
-            <input class="exercise-input" type="number" placeholder="—" value="${saved.reps||''}" id="${key}_rp_${i}" min="0">
-          </div>`;
-        }).join('')}
-      </div>`;
+    exerciseHTML = `<div class="field-group">
+      <label class="field-label" style="margin-bottom:8px;">Exercícios — toque para marcar como feito</label>
+      ${exercises.map((ex, i) => {
+        const saved = (log.exercises || [])[i] || {};
+        const isDone = saved.done || false;
+        return `
+        <div class="exercise-block ${isDone ? 'ex-done' : ''}" id="${key}_exblock_${i}" onclick="toggleExDone('${key}',${i})">
+          <div class="exercise-top">
+            <div class="ex-check">${isDone ? '✓' : ''}</div>
+            <div class="ex-name-wrap">
+              <span class="exercise-name">${ex.name}</span>
+              <span class="exercise-prescription">📋 ${ex.prescription}</span>
+            </div>
+          </div>
+          <div class="exercise-fields" onclick="event.stopPropagation()">
+            <div class="ex-field-wrap">
+              <span class="ex-field-label">Carga (kg)</span>
+              <input class="exercise-input" type="number" placeholder="—" value="${saved.kg||''}" id="${key}_kg_${i}" min="0" step="0.5">
+            </div>
+            <div class="ex-field-wrap">
+              <span class="ex-field-label">Reps / Tempo</span>
+              <input class="exercise-input" type="text" placeholder="—" value="${saved.reps||''}" id="${key}_rp_${i}">
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
   }
 
   const showKm = !isForce;
   const toggleState = log.done ? 'on' : '';
+  const doneCount = isForce ? (log.exercises || []).filter(e => e.done).length : 0;
+  const totalEx = isForce ? exercises.length : 0;
 
   container.innerHTML = `
     <div class="log-section">
       <h3>Registrar Execução</h3>
+      ${isForce ? `
+      <div style="background:var(--parch2);border-radius:7px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:var(--rust);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Exercícios concluídos</span>
+        <span id="${key}_exsummary" style="font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--rust);">${doneCount}/${totalEx}</span>
+      </div>` : ''}
       <div class="field-group">
         <div class="done-toggle" onclick="toggleDone('${key}')">
           <div class="toggle-track ${toggleState}" id="tog_${key}">
             <div class="toggle-thumb"></div>
           </div>
-          <span class="toggle-label" id="togLabel_${key}">${log.done ? '✓ Treino realizado' : 'Marcar como feito'}</span>
+          <span class="toggle-label" id="togLabel_${key}">${log.done ? '✓ Treino realizado' : 'Marcar treino como feito'}</span>
         </div>
       </div>
       ${showKm ? `<div class="field-group">
@@ -1066,7 +1314,32 @@ function toggleDone(key) {
   const track = document.getElementById('tog_'+key);
   const label = document.getElementById('togLabel_'+key);
   const isOn = track.classList.toggle('on');
-  label.textContent = isOn ? '✓ Treino realizado' : 'Marcar como feito';
+  label.textContent = isOn ? '✓ Treino realizado' : 'Marcar treino como feito';
+}
+
+function toggleExDone(key, i) {
+  const block = document.getElementById(`${key}_exblock_${i}`);
+  const check = block.querySelector('.ex-check');
+  const isDone = block.classList.toggle('ex-done');
+  check.textContent = isDone ? '✓' : '';
+
+  // Update summary counter
+  const summary = document.getElementById(`${key}_exsummary`);
+  if (summary) {
+    const allBlocks = document.querySelectorAll(`[id^="${key}_exblock_"]`);
+    const doneCount = [...allBlocks].filter(b => b.classList.contains('ex-done')).length;
+    summary.textContent = `${doneCount}/${allBlocks.length}`;
+
+    // Auto-toggle main done if all exercises checked
+    if (doneCount === allBlocks.length) {
+      const track = document.getElementById('tog_'+key);
+      const label = document.getElementById('togLabel_'+key);
+      if (track && !track.classList.contains('on')) {
+        track.classList.add('on');
+        label.textContent = '✓ Treino realizado';
+      }
+    }
+  }
 }
 
 function saveLogForm(key, isForce, exCount) {
@@ -1077,9 +1350,11 @@ function saveLogForm(key, isForce, exCount) {
 
   if (isForce) {
     for (let i = 0; i < exCount; i++) {
+      const block = document.getElementById(`${key}_exblock_${i}`);
       exercises.push({
+        done: block ? block.classList.contains('ex-done') : false,
         kg: parseFloat(document.getElementById(`${key}_kg_${i}`)?.value) || 0,
-        reps: parseInt(document.getElementById(`${key}_rp_${i}`)?.value) || 0
+        reps: document.getElementById(`${key}_rp_${i}`)?.value || ''
       });
     }
   }
